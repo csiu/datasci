@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+<style>
+.node {
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+.link {
+  stroke: #999;
+  stroke-opacity: .6;
+}
+</style>
+
+<body>
+<div class="chart">
+<script>
+var nodes = [
+{'group': '5-10 neighbors', 'name': 'Beak'},
+{'group': '5-10 neighbors', 'name': 'Beescratch'},
+{'group': '5-10 neighbors', 'name': 'Bumper'},
+{'group': '< 4 neighbors', 'name': 'CCL'},
+{'group': '< 4 neighbors', 'name': 'Cross'},
+{'group': '5-10 neighbors', 'name': 'DN16'},
+{'group': '5-10 neighbors', 'name': 'DN21'},
+{'group': '5-10 neighbors', 'name': 'DN63'},
+{'group': '5-10 neighbors', 'name': 'Double'},
+{'group': '5-10 neighbors', 'name': 'Feather'},
+{'group': '5-10 neighbors', 'name': 'Fish'},
+{'group': '< 4 neighbors', 'name': 'Five'},
+{'group': '< 4 neighbors', 'name': 'Fork'},
+{'group': '5-10 neighbors', 'name': 'Gallatin'},
+{'group': '> 10 neighbors', 'name': 'Grin'},
+{'group': '5-10 neighbors', 'name': 'Haecksel'},
+{'group': '5-10 neighbors', 'name': 'Hook'},
+{'group': '5-10 neighbors', 'name': 'Jet'},
+{'group': '5-10 neighbors', 'name': 'Jonah'},
+{'group': '5-10 neighbors', 'name': 'Knit'},
+{'group': '5-10 neighbors', 'name': 'Kringel'},
+{'group': '5-10 neighbors', 'name': 'MN105'},
+{'group': '< 4 neighbors', 'name': 'MN23'},
+{'group': '< 4 neighbors', 'name': 'MN60'},
+{'group': '5-10 neighbors', 'name': 'MN83'},
+{'group': '< 4 neighbors', 'name': 'Mus'},
+{'group': '< 4 neighbors', 'name': 'Notch'},
+{'group': '5-10 neighbors', 'name': 'Number1'},
+{'group': '5-10 neighbors', 'name': 'Oscar'},
+{'group': '5-10 neighbors', 'name': 'Patchback'},
+{'group': '5-10 neighbors', 'name': 'PL'},
+{'group': '< 4 neighbors', 'name': 'Quasi'},
+{'group': '< 4 neighbors', 'name': 'Ripplefluke'},
+{'group': '5-10 neighbors', 'name': 'Scabs'},
+{'group': '5-10 neighbors', 'name': 'Shmuddel'},
+{'group': '< 4 neighbors', 'name': 'SMN5'},
+{'group': '5-10 neighbors', 'name': 'SN100'},
+{'group': '> 10 neighbors', 'name': 'SN4'},
+{'group': '5-10 neighbors', 'name': 'SN63'},
+{'group': '< 4 neighbors', 'name': 'SN89'},
+{'group': '5-10 neighbors', 'name': 'SN9'},
+{'group': '5-10 neighbors', 'name': 'SN90'},
+{'group': '5-10 neighbors', 'name': 'SN96'},
+{'group': '5-10 neighbors', 'name': 'Stripes'},
+{'group': '5-10 neighbors', 'name': 'Thumper'},
+{'group': '> 10 neighbors', 'name': 'Topless'},
+{'group': '< 4 neighbors', 'name': 'TR120'},
+{'group': '5-10 neighbors', 'name': 'TR77'},
+{'group': '< 4 neighbors', 'name': 'TR82'},
+{'group': '< 4 neighbors', 'name': 'TR88'},
+{'group': '5-10 neighbors', 'name': 'TR99'},
+{'group': '5-10 neighbors', 'name': 'Trigger'},
+{'group': '5-10 neighbors', 'name': 'TSN103'},
+{'group': '< 4 neighbors', 'name': 'TSN83'},
+{'group': '5-10 neighbors', 'name': 'Upbang'},
+{'group': '< 4 neighbors', 'name': 'Vau'},
+{'group': '< 4 neighbors', 'name': 'Wave'},
+{'group': '5-10 neighbors', 'name': 'Web'},
+{'group': '< 4 neighbors', 'name': 'Whitetip'},
+{'group': '5-10 neighbors', 'name': 'Zap'},
+{'group': '< 4 neighbors', 'name': 'Zig'},
+{'group': '< 4 neighbors', 'name': 'Zipfel'},
+];
+var links = [
+{'source': 0, 'target': 40},
+{'source': 0, 'target': 10},
+{'source': 0, 'target': 14},
+{'source': 0, 'target': 15},
+{'source': 0, 'target': 47},
+{'source': 0, 'target': 42},
+{'source': 1, 'target': 36},
+{'source': 1, 'target': 41},
+{'source': 1, 'target': 17},
+{'source': 1, 'target': 19},
+{'source': 1, 'target': 54},
+{'source': 1, 'target': 26},
+{'source': 1, 'target': 27},
+{'source': 1, 'target': 28},
+{'source': 2, 'target': 10},
+{'source': 2, 'target': 44},
+{'source': 2, 'target': 42},
+{'source': 2, 'target': 61},
+{'source': 3, 'target': 8},
+{'source': 3, 'target': 59},
+{'source': 3, 'target': 14},
+{'source': 4, 'target': 51},
+{'source': 5, 'target': 56},
+{'source': 5, 'target': 9},
+{'source': 5, 'target': 13},
+{'source': 5, 'target': 57},
+{'source': 6, 'target': 9},
+{'source': 6, 'target': 13},
+{'source': 6, 'target': 17},
+{'source': 6, 'target': 54},
+{'source': 6, 'target': 56},
+{'source': 6, 'target': 57},
+{'source': 7, 'target': 40},
+{'source': 7, 'target': 19},
+{'source': 7, 'target': 27},
+{'source': 7, 'target': 30},
+{'source': 7, 'target': 54},
+{'source': 8, 'target': 37},
+{'source': 8, 'target': 45},
+{'source': 8, 'target': 20},
+{'source': 8, 'target': 59},
+{'source': 8, 'target': 28},
+{'source': 9, 'target': 32},
+{'source': 9, 'target': 41},
+{'source': 9, 'target': 13},
+{'source': 9, 'target': 17},
+{'source': 9, 'target': 57},
+{'source': 10, 'target': 47},
+{'source': 10, 'target': 42},
+{'source': 10, 'target': 29},
+{'source': 11, 'target': 51},
+{'source': 12, 'target': 33},
+{'source': 13, 'target': 32},
+{'source': 13, 'target': 17},
+{'source': 13, 'target': 54},
+{'source': 13, 'target': 41},
+{'source': 13, 'target': 57},
+{'source': 14, 'target': 33},
+{'source': 14, 'target': 34},
+{'source': 14, 'target': 37},
+{'source': 14, 'target': 38},
+{'source': 14, 'target': 40},
+{'source': 14, 'target': 43},
+{'source': 14, 'target': 16},
+{'source': 14, 'target': 50},
+{'source': 14, 'target': 52},
+{'source': 14, 'target': 24},
+{'source': 15, 'target': 40},
+{'source': 15, 'target': 45},
+{'source': 15, 'target': 18},
+{'source': 15, 'target': 55},
+{'source': 15, 'target': 24},
+{'source': 15, 'target': 59},
+{'source': 16, 'target': 33},
+{'source': 16, 'target': 37},
+{'source': 16, 'target': 38},
+{'source': 16, 'target': 50},
+{'source': 16, 'target': 20},
+{'source': 17, 'target': 22},
+{'source': 17, 'target': 25},
+{'source': 17, 'target': 57},
+{'source': 17, 'target': 27},
+{'source': 17, 'target': 31},
+{'source': 18, 'target': 45},
+{'source': 18, 'target': 51},
+{'source': 18, 'target': 20},
+{'source': 18, 'target': 21},
+{'source': 18, 'target': 24},
+{'source': 18, 'target': 29},
+{'source': 19, 'target': 30},
+{'source': 19, 'target': 54},
+{'source': 20, 'target': 36},
+{'source': 20, 'target': 38},
+{'source': 20, 'target': 44},
+{'source': 20, 'target': 50},
+{'source': 20, 'target': 47},
+{'source': 20, 'target': 28},
+{'source': 21, 'target': 33},
+{'source': 21, 'target': 37},
+{'source': 21, 'target': 45},
+{'source': 21, 'target': 51},
+{'source': 21, 'target': 29},
+{'source': 23, 'target': 51},
+{'source': 23, 'target': 36},
+{'source': 23, 'target': 45},
+{'source': 24, 'target': 45},
+{'source': 24, 'target': 51},
+{'source': 24, 'target': 29},
+{'source': 25, 'target': 26},
+{'source': 25, 'target': 27},
+{'source': 26, 'target': 27},
+{'source': 28, 'target': 30},
+{'source': 28, 'target': 47},
+{'source': 29, 'target': 35},
+{'source': 29, 'target': 43},
+{'source': 29, 'target': 45},
+{'source': 29, 'target': 51},
+{'source': 29, 'target': 52},
+{'source': 30, 'target': 47},
+{'source': 30, 'target': 42},
+{'source': 32, 'target': 60},
+{'source': 33, 'target': 34},
+{'source': 33, 'target': 37},
+{'source': 33, 'target': 38},
+{'source': 33, 'target': 40},
+{'source': 33, 'target': 43},
+{'source': 33, 'target': 50},
+{'source': 34, 'target': 44},
+{'source': 34, 'target': 37},
+{'source': 34, 'target': 49},
+{'source': 36, 'target': 37},
+{'source': 36, 'target': 39},
+{'source': 36, 'target': 40},
+{'source': 36, 'target': 59},
+{'source': 37, 'target': 43},
+{'source': 37, 'target': 45},
+{'source': 37, 'target': 40},
+{'source': 37, 'target': 61},
+{'source': 38, 'target': 43},
+{'source': 38, 'target': 44},
+{'source': 38, 'target': 52},
+{'source': 38, 'target': 58},
+{'source': 39, 'target': 57},
+{'source': 40, 'target': 52},
+{'source': 41, 'target': 57},
+{'source': 41, 'target': 54},
+{'source': 42, 'target': 47},
+{'source': 42, 'target': 50},
+{'source': 43, 'target': 46},
+{'source': 43, 'target': 53},
+{'source': 45, 'target': 50},
+{'source': 45, 'target': 51},
+{'source': 45, 'target': 59},
+{'source': 46, 'target': 49},
+{'source': 48, 'target': 57},
+{'source': 50, 'target': 51},
+{'source': 51, 'target': 55},
+{'source': 53, 'target': 61},
+{'source': 54, 'target': 57},
+];
+
+
+var width = 640,
+    height = 480;
+
+var color = d3.scale.category10()
+    .domain(['< 4 neighbors', '5-10 neighbors', '> 10 neighbors']);
+
+var svg = d3.select('.chart').append('svg')
+    .attr('width', width)
+    .attr('height', height);
+
+var force = d3.layout.force()
+    .size([width, height])
+    .charge(-120)
+    .linkDistance(50)
+    .nodes(nodes)
+    .links(links);
+
+var link = svg.selectAll('.link')
+    .data(links)
+    .enter().append('line')
+    .attr('class', 'link')
+    .style("stroke-width", function(d) { return Math.sqrt(d.value); });
+    
+var node = svg.selectAll('.node')
+    .data(nodes)
+    .enter().append('circle')
+    .attr('class', 'node')
+    .attr("r", 5)
+    .style("fill", function(d) { return color(d.group); })
+    .call(force.drag);
+
+node.append("title")
+    .text(function(d) { return d.name; });
+
+force.on("tick", function() {
+    link.attr("x1", function(d) { return d.source.x; })
+        .attr("y1", function(d) { return d.source.y; })
+        .attr("x2", function(d) { return d.target.x; })
+        .attr("y2", function(d) { return d.target.y; });
+
+    node.attr("cx", function(d) { return d.x; })
+        .attr("cy", function(d) { return d.y; });
+});
+force.start();
+
+//Legend
+var legend = svg.selectAll(".legend")
+    .data(color.domain())
+    .enter().append("g")
+    .attr("class", "legend")
+    .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+legend.append("rect")
+    .attr("x", width - 18)
+    .attr("width", 18)
+    .attr("height", 18)
+    .style("fill", color);
+
+legend.append("text")
+    .attr("x", width - 24)
+    .attr("y", 9)
+    .attr("dy", ".35em")
+    .style("text-anchor", "end")
+    .text(function(d){return d});
+</script>
+</div>
+</body>
+</html>
