@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<style>
+body {
+    font: 12px sans-serif;
+}
+.axis path, .axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+.x.axis path {
+    display: none;
+}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+
+<body>
+<div class="chart"></div>
+<script type="text/javascript">
+
+var data = [
+{"key":"Preschool","Married-civ-spouse":20,"Married-AF-spouse":0,"Married-spouse-absent":4,"Separated":1,"Divorced":1,"Widowed":3,"Never-married":22},
+{"key":"1st-4th","Married-civ-spouse":81,"Married-AF-spouse":0,"Married-spouse-absent":12,"Separated":9,"Divorced":10,"Widowed":17,"Never-married":39},
+{"key":"5th-6th","Married-civ-spouse":172,"Married-AF-spouse":0,"Married-spouse-absent":20,"Separated":18,"Divorced":20,"Widowed":14,"Never-married":89},
+{"key":"7th-8th","Married-civ-spouse":359,"Married-AF-spouse":0,"Married-spouse-absent":14,"Separated":23,"Divorced":73,"Widowed":64,"Never-married":113},
+{"key":"9th","Married-civ-spouse":230,"Married-AF-spouse":0,"Married-spouse-absent":9,"Separated":33,"Divorced":64,"Widowed":23,"Never-married":155},
+{"key":"10th","Married-civ-spouse":349,"Married-AF-spouse":0,"Married-spouse-absent":15,"Separated":49,"Divorced":120,"Widowed":39,"Never-married":361},
+{"key":"11th","Married-civ-spouse":354,"Married-AF-spouse":0,"Married-spouse-absent":19,"Separated":48,"Divorced":130,"Widowed":38,"Never-married":586},
+{"key":"12th","Married-civ-spouse":130,"Married-AF-spouse":0,"Married-spouse-absent":8,"Separated":14,"Divorced":39,"Widowed":10,"Never-married":232},
+{"key":"HS-grad","Married-civ-spouse":4845,"Married-AF-spouse":13,"Married-spouse-absent":121,"Separated":406,"Divorced":1613,"Widowed":414,"Never-married":3089},
+{"key":"Prof-school","Married-civ-spouse":412,"Married-AF-spouse":0,"Married-spouse-absent":3,"Separated":8,"Divorced":55,"Widowed":5,"Never-married":93},
+{"key":"Assoc-acdm","Married-civ-spouse":460,"Married-AF-spouse":2,"Married-spouse-absent":12,"Separated":30,"Divorced":203,"Widowed":23,"Never-married":337},
+{"key":"Assoc-voc","Married-civ-spouse":689,"Married-AF-spouse":1,"Married-spouse-absent":13,"Separated":42,"Divorced":234,"Widowed":41,"Never-married":362},
+{"key":"Some-college","Married-civ-spouse":2818,"Married-AF-spouse":3,"Married-spouse-absent":76,"Separated":220,"Divorced":1069,"Widowed":172,"Never-married":2933},
+{"key":"Bachelors","Married-civ-spouse":2768,"Married-AF-spouse":4,"Married-spouse-absent":68,"Separated":92,"Divorced":546,"Widowed":82,"Never-married":1795},
+{"key":"Masters","Married-civ-spouse":1003,"Married-AF-spouse":0,"Married-spouse-absent":17,"Separated":25,"Divorced":233,"Widowed":41,"Never-married":404},
+{"key":"Doctorate","Married-civ-spouse":286,"Married-AF-spouse":0,"Married-spouse-absent":7,"Separated":7,"Divorced":33,"Widowed":7,"Never-married":73},
+];
+
+var margin = {top: 0, right: 0, bottom: 50, left: 50},
+    width = 600 - margin.left - margin.right,
+    height = 400 - margin.top - margin.bottom;
+
+var color = d3.scale.category10()
+    .domain(d3.keys(data[0]).slice(1))
+    .range(["#F8766D", "#C49A00", "#53B400", "#00C094", "#00B6EB", "#A58AFF", "#FB61D7"]);
+
+data.forEach(function(d) {
+    var y0 = 0;
+    d.pieces = color.domain().map(function(name) { return {name: name, y0: y0, y1: y0 += +d[name]}; });
+    d.total = d.pieces[d.pieces.length - 1].y1;
+});
+
+var x = d3.scale.ordinal()
+    .domain(data.map(function(d){return d['key'];}))
+    .rangeRoundBands([0, width], .05);
+
+var y = d3.scale.linear()
+    .domain([0, d3.max(data.map(function(d){return d.total;}))])
+    .rangeRound([height, 0]);
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left");
+
+var chart = d3.select('.chart').append('svg')
+	.attr('width', width + margin.left + margin.right)
+	.attr('height', height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+var bar = chart.selectAll("g")
+    .data(data)
+  .enter().append("g")
+    .attr("transform", function(d, i) { return "translate(" + x(d['key']) + ",0)"; });
+
+bar.selectAll("rect")
+    .data(function(d) { return d.pieces; })
+  .enter().append("rect")
+    .attr("y", function(d){return y(d.y1); })
+    .attr("height", function(d) { return y(d.y0) - y(d.y1); })
+    .attr("width", x.rangeBand())
+    .style("fill", function(d){ return color(d.name); });
+
+/**ADD TEXT TO BAR
+bar.selectAll("text")
+    .data(function(d) { return d.pieces; })
+  .enter().append("text")
+    .attr("x", function(d){ return x(d) ; })
+    .attr("y", function(d){ return y(d.y1) + 13 })
+    .text(function(d) { return (d.y1 - d.y0); });
+**/
+
+chart.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(xAxis)
+    .selectAll("text")
+        .style("text-anchor", "end")
+        .attr("dx", "1em")
+        .attr("dy", "1em")
+        .attr("transform", function(d){return "rotate(-30)"});
+
+chart.append("g")
+    .attr("class", "y axis")
+    .attr("transform", "translate(0,0)")
+    .call(yAxis);
+
+var legend = chart.selectAll(".legend")
+    .data(color.domain().reverse())
+  .enter().append("g")
+    .attr("class", "legend")
+    .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+legend.append("rect")
+    .attr("x", x.rangeBand()/2)
+    .attr("width", 18)
+    .attr("height", 18)
+    .style("fill", color);
+
+legend.append("text")
+    .attr("x", x.rangeBand()/2 + 24)
+    .attr("y", 9)
+    .attr("dy", ".35em")
+    .style("text-anchor", "start")
+    .text(function(d){return d;});
+</script>
+</body>
+</html>
