@@ -89,7 +89,15 @@ bar.selectAll("rect")
     .attr("y", function(d){return y(d.y1); })
     .attr("height", function(d) { return y(d.y0) - y(d.y1); })
     .attr("width", x.rangeBand())
-    .style("fill", function(d){ return color(d.name); });
+    .style("fill", function(d){ return color(d.name); })
+    .on("mouseover", function(d){
+        d3.select(this)
+            .style({opacity:'0.7'})
+    })
+    .on("mouseout", function(d){
+        d3.select(this)
+            .style({opacity:'1'})
+    });
 
 /**ADD TEXT TO BAR
 bar.selectAll("text")
