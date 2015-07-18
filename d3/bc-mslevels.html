@@ -68,9 +68,9 @@ d3.tsv("https://raw.githubusercontent.com/csiu/datasets/master/mstory.tsv", type
 	bar.append("text")
 		.attr("class", "xticklab")
 	  	.attr("transform", "rotate(-90)")
-	  	.attr("dx", -y(0)+1)
+	  	.attr("dx", function(d){ return -y(d.Level)-2; })
 	  	.attr("dy", ".8em")
-	  	.style("text-anchor", "start")
+	  	.style("text-anchor", "end")
 	    .text(function(d) { return d.Job; });
 
 	chart.append("g")
