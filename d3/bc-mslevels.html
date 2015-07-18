@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<style>
+body {
+    font: 12px sans-serif;
+}
+.axis path, .axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+.ylab {
+    fill: #A9A9A9;
+}
+text.xticklab {
+	fill: #000;
+}
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+<body>
+<div class="chart"></div>
+<script>
+var margin = {top: 20, right: 55, bottom: 100, left: 30},
+    width = 666 - margin.left - margin.right,
+    height = 400 - margin.top - margin.bottom;
+
+var color = d3.scale.category20();
+
+var x = d3.scale.ordinal()
+	.rangeRoundBands([0, width], 0.1);
+
+var y = d3.scale.linear()
+	.range([height,0])
+	.domain([0,250]);
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left");
+
+var chart = d3.select('.chart')
+  .append('svg')
+	.attr('width', width + margin.left + margin.right)
+	.attr('height', height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+d3.tsv("https://raw.githubusercontent.com/csiu/datasets/master/mstory.tsv", type, function(error, data){
+	x.domain(data.map(function(d){ return d['Job']; }));
+	color.domain(data.map(function(d){ return d['Job']; }));
+
+	var bar = chart.selectAll("g")
+    	.data(data)
+	  .enter().append("g")
+	    .attr("transform", function(d, i) { return "translate(" + x(d['Job']) + ",0)"; });
+
+	bar.append("rect")
+	  	.attr("class", function(d){ return d.Job.replace(/ /g, ""); })
+	    .attr("y", function(d){return y(d.Level); })
+	    .attr("height", function(d) { return (y(0) - y(d.Level)); })
+	    .attr("width", x.rangeBand())
+	    .style("fill", function(d){ return color(d.Job); });
+
+	bar.append("text")
+		.attr("class", "xticklab")
+	  	.attr("transform", "rotate(-90)")
+	  	.attr("dx", -y(0)+1)
+	  	.attr("dy", ".8em")
+	  	.style("text-anchor", "start")
+	    .text(function(d) { return d.Job; });
+
+	chart.append("g")
+	    .attr("class", "y axis")
+	    .call(yAxis)
+	.append("text")
+		.attr("class", "ylab")
+	    .style("text-anchor", "end")
+	    .attr("dy", "-.3em")
+	    .text("Level");
+
+});
+
+function type(d){
+	if (d.Level == "NA") {
+		d.Level = 0
+	} else {
+		d.Level = +d.Level
+	}
+	return d;
+}
+</script>
+</body>
+</html>
