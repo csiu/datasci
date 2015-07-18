@@ -82,8 +82,7 @@ var tooltip = d3.select("body")
     .attr("class", "infobox")
     .style("position", "absolute")
     .style("z-index", "10")
-    .style("visibility", "hidden")
-    .text("a simple tooltip");
+    .style("visibility", "hidden");
 
 var chart = d3.select('.chart')
   .append('svg')
@@ -108,7 +107,8 @@ bar.selectAll("rect")
         d3.select(this)
             .style({opacity:'0.7'});
         tooltip
-            .style("visibility", "visible");
+            .style("visibility", "visible")
+            .html("<b>" + d.name + "</b><br/>Count: " +  (d.y1 - d.y0));
     })
     .on("mousemove", function(){
         tooltip
