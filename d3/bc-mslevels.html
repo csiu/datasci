@@ -64,15 +64,18 @@ var chart = d3.select('.chart')
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 d3.tsv("https://raw.githubusercontent.com/csiu/datasets/master/mstory.tsv", type, function(error, data){
-	var originalorder = data.map(function(d){ return d['Job']; });
+	var n = 0;
+	data.forEach(function(d){
+		d.originalorder = n += 1;
+	});
 
-    x.domain(originalorder);
+ 	x.domain(data.map(function(d){ return d.Job; }));
 
 	var bar = chart.selectAll("g")
     	.data(data)
 	  .enter().append("g")
 	  	.attr("class", "gbar")
-	    .attr("transform", function(d, i) { return "translate(" + x(d['Job']) + ",0)"; });
+	    .attr("transform", function(d, i) { return "translate(" + x(d.Job) + ",0)"; });
 
 	bar.append("rect")
 	  	.attr("class", function(d){ return d.Job.replace(/ /g, ""); })
@@ -130,12 +133,9 @@ d3.tsv("https://raw.githubusercontent.com/csiu/datasets/master/mstory.tsv", type
 	    // Copy-on-write since tweens are evaluated after a delay.
 	    var x0 = x.domain(data.sort(this.checked
 	    		? function(a, b) { return b.Level - a.Level; }
-		        : function(a, b) { return 0; }) //Not used
+		        : function(a, b) { return a.originalorder - b.originalorder; })
 		        .map(function(d) { return d.Job; }))
 	        .copy();
-	    if (!this.checked) {
-	    	x0.domain(originalorder);
-	    }
 
 	    chart.selectAll(".gbar")
 	        .sort(function(d) { return x0(d.Job); });
