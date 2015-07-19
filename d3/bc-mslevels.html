@@ -150,11 +150,7 @@ d3.tsv("https://raw.githubusercontent.com/csiu/datasets/master/mstory.tsv", type
 });
 
 function type(d){
-	if (d.Level == "NA") {
-		d.Level = 0
-	} else {
-		d.Level = +d.Level
-	}
+	d.Level == "NA" ? d.Level = 0 : d.Level = +d.Level;
 	return d;
 }
 
