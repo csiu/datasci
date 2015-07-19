@@ -37,11 +37,13 @@ path.hline {
 var jobadvancement = [30, 60, 100],
 	hyperskillsA = [140, 170, 200];
 
-var margin = {top: 20, right: 50, bottom: 100, left: 30},
+var margin = {top: 20, right: 40, bottom: 100, left: 30},
     width = 666 - margin.left - margin.right,
     height = 400 - margin.top - margin.bottom;
 
-var color = d3.scale.category20c();
+var color = d3.scale.ordinal()
+	.domain(["Beginner", "Bowman", "Magician", "Pirate", "Thief", "Warrior"])
+	.range(["Yellow", "#2ca02c", "#9467bd", "#17becf", "#c7c7c7", "#ff9896"]);
 
 var x = d3.scale.ordinal()
 	.rangeRoundBands([0, width], 0.1);
@@ -69,7 +71,6 @@ d3.tsv("https://raw.githubusercontent.com/csiu/datasets/master/mstory.tsv", type
 	var originalorder = data.map(function(d){ return d['Job']; });
 
     x.domain(originalorder);
-	color.domain(originalorder);
 
 	var bar = chart.selectAll("g")
     	.data(data)
@@ -82,7 +83,7 @@ d3.tsv("https://raw.githubusercontent.com/csiu/datasets/master/mstory.tsv", type
 	    .attr("y", function(d){return y(d.Level); })
 	    .attr("height", function(d) { return (y(0) - y(d.Level)); })
 	    .attr("width", x.rangeBand())
-	    .style("fill", function(d){ return color(d.Job); });
+	    .style("fill", function(d){ return color(d.Role); });
 
 	bar.append("text")
 		.attr("class", "xticklab")
