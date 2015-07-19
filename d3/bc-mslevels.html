@@ -21,6 +21,10 @@ label {
 	left: 40px;
 	color: #A9A9A9;
 }
+path.hline {
+	stroke: #A9A9A9;
+	stroke-width: 0.5;
+}
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
@@ -30,7 +34,10 @@ label {
 <div class="chart"></div>
 
 <script>
-var margin = {top: 20, right: 55, bottom: 100, left: 30},
+var jobadvancement = [30, 60, 100],
+	hyperskillsA = [140, 170, 200];
+
+var margin = {top: 20, right: 50, bottom: 100, left: 30},
     width = 666 - margin.left - margin.right,
     height = 400 - margin.top - margin.bottom;
 
@@ -134,6 +141,20 @@ function type(d){
 	}
 	return d;
 }
+
+chart.selectAll("g")
+	.data(jobadvancement)
+  .enter().append("path")
+  	.attr("class", "hline")
+	.attr("d", function(l){return "M 0 " + y(l) + " " + width + " " + y(l)});
+
+chart.selectAll("g")
+	.data(hyperskillsA)
+  .enter().append("path")
+  	.attr("class", "hline")
+  	.style("stroke-dasharray", "2,2")
+	.attr("d", function(l){return "M 0 " + y(l) + " " + width + " " + y(l)});
+
 </script>
 </body>
 </html>
