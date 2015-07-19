@@ -15,17 +15,26 @@ body {
 text.xticklab {
 	fill: #000;
 }
+label {
+	position: absolute;
+	top: 11.5px;
+	left: 40px;
+	color: #A9A9A9;
+}
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
 <body>
+
+<label><input type="checkbox"> Sort by levels</label>
 <div class="chart"></div>
+
 <script>
 var margin = {top: 20, right: 55, bottom: 100, left: 30},
     width = 666 - margin.left - margin.right,
     height = 400 - margin.top - margin.bottom;
 
-var color = d3.scale.category20();
+var color = d3.scale.category20c();
 
 var x = d3.scale.ordinal()
 	.rangeRoundBands([0, width], 0.1);
@@ -50,12 +59,15 @@ var chart = d3.select('.chart')
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 d3.tsv("https://raw.githubusercontent.com/csiu/datasets/master/mstory.tsv", type, function(error, data){
-	x.domain(data.map(function(d){ return d['Job']; }));
-	color.domain(data.map(function(d){ return d['Job']; }));
+	var originalorder = data.map(function(d){ return d['Job']; });
+
+    x.domain(originalorder);
+	color.domain(originalorder);
 
 	var bar = chart.selectAll("g")
     	.data(data)
 	  .enter().append("g")
+	  	.attr("class", "gbar")
 	    .attr("transform", function(d, i) { return "translate(" + x(d['Job']) + ",0)"; });
 
 	bar.append("rect")
@@ -81,6 +93,38 @@ d3.tsv("https://raw.githubusercontent.com/csiu/datasets/master/mstory.tsv", type
 	    .style("text-anchor", "end")
 	    .attr("dy", "-.3em")
 	    .text("Level");
+
+    d3.select("input")
+    	.on("change", change);
+
+	var sortTimeout = setTimeout(function() {
+	    d3.select("input").property("checked", true).each(change);
+	  }, 2000);
+
+	function change() {
+		clearTimeout(sortTimeout); //Not working?
+
+	    // Copy-on-write since tweens are evaluated after a delay.
+	    var x0 = x.domain(data.sort(this.checked
+	    		? function(a, b) { return b.Level - a.Level; }
+		        : function(a, b) { return 0; }) //Not used
+		        .map(function(d) { return d.Job; }))
+	        .copy();
+	    if (!this.checked) {
+	    	x0.domain(originalorder);
+	    }
+
+	    chart.selectAll(".gbar")
+	        .sort(function(d) { return x0(d.Job); });
+
+	    var transition = chart.transition().duration(750),
+	        delay = function(d, i) { return i * 50; };
+
+	    transition.selectAll(".gbar")
+	        .delay(delay)
+		    .attr("transform", function(d, i) { return "translate(" + x0(d.Job) + ",0)"; });
+
+	};
 
 });
 
