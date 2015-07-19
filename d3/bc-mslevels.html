@@ -117,13 +117,11 @@ d3.tsv("https://raw.githubusercontent.com/csiu/datasets/master/mstory.tsv", type
 	    chart.selectAll(".gbar")
 	        .sort(function(d) { return x0(d.Job); });
 
-	    var transition = chart.transition().duration(750),
-	        delay = function(d, i) { return i * 50; };
-
-	    transition.selectAll(".gbar")
-	        .delay(delay)
+	    chart.transition()
+	        .duration(750)
+	      .selectAll(".gbar")
+	        .delay(function(d, i) { return i * 50; })
 		    .attr("transform", function(d, i) { return "translate(" + x0(d.Job) + ",0)"; });
-
 	};
 
 });
