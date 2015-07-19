@@ -102,6 +102,25 @@ d3.tsv("https://raw.githubusercontent.com/csiu/datasets/master/mstory.tsv", type
 	    .attr("dy", "-.3em")
 	    .text("Level");
 
+	var legend = chart.selectAll(".legend")
+	    .data(color.domain())
+	  .enter().append("g")
+	    .attr("class", "legend")
+	    .attr("transform", function(d, i) { return "translate(" + width + "," + i * 19 + ")"; });
+
+	legend.append("rect")
+	    .attr("x", x.rangeBand()/2)
+	    .attr("width", 16)
+	    .attr("height", 16)
+	    .style("fill", color);
+
+	legend.append("text")
+	    .attr("x", x.rangeBand()/2 - 3)
+	    .attr("y", 9)
+	    .attr("dy", ".35em")
+	    .style("text-anchor", "end")
+	    .text(function(d){return d;});
+
     d3.select("input")
     	.on("change", change);
 
