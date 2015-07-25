@@ -38,8 +38,8 @@ var jobadvancement = [30, 60, 100],
 	hyperskillsA = [140, 170, 200];
 
 var margin = {top: 20, right: 40, bottom: 100, left: 30},
-    width = 666 - margin.left - margin.right,
-    height = 400 - margin.top - margin.bottom;
+    width = 800 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
 
 var color = d3.scale.ordinal()
 	.domain(["Beginner", "Bowman", "Magician", "Pirate", "Thief", "Warrior"])
@@ -88,7 +88,7 @@ d3.tsv("https://raw.githubusercontent.com/csiu/datasets/master/mstory.tsv", type
 		.attr("class", "xticklab")
 	  	.attr("transform", "rotate(-90)")
 	  	.attr("dx", function(d){ return -y(d.Level)-2; })
-	  	.attr("dy", ".8em")
+	  	.attr("dy", ".91em")
 	  	.style("text-anchor", "end")
 	    .text(function(d) { return d.Job; });
 
