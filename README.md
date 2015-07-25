@@ -4,7 +4,7 @@
 3. Pie chart
 4. Visualization using a map: Choropleth
 5. Visualization using a map: Cartograms
-6. [Sortable bar chart](d3/bc-mslevels.html)
+6. [Sortable bar chart](https://rawgit.com/csiu/datasci/master/d3/bc-mslevels.html)
 7. Random Forest
 8. SVM
 9. SVD
