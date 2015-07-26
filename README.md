@@ -11,3 +11,8 @@
 10. KNN
 11. Document classification by Naive Bayes
 12. [~~Part-of-speech tagging~~](http://nbviewer.ipython.org/github/csiu/datasci/blob/master/text/2015-07-23_nltk-and-POS.ipynb)
+13. Document classification by Decision tree
+14. Document classification by KNN
+15. Document classification by Neural Network
+16. Document classification by SVM
+17. Document classification by Random Forest
