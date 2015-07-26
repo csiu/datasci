@@ -9,7 +9,7 @@
 8. SVM
 9. SVD
 10. KNN
-11. Document classification by Naive Bayes
+11. [Document classification by Naive Bayes](http://nbviewer.ipython.org/github/csiu/datasci/blob/master/text/2015-07-25_document-classification_nb.ipynb)
 12. [~~Part-of-speech tagging~~](http://nbviewer.ipython.org/github/csiu/datasci/blob/master/text/2015-07-23_nltk-and-POS.ipynb)
 13. Document classification by Decision tree
 14. Document classification by KNN
