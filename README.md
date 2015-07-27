@@ -16,3 +16,4 @@
 15. Document classification by Neural Network
 16. Document classification by SVM
 17. Document classification by Random Forest
+18. ROC
